@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EduPlanner</title>
+
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3B82F6">
+
+<style>
+
+body{
+  font-family: Arial;
+  text-align:center;
+  background:#f4f6ff;
+  padding:20px;
+}
+
+h1{
+  color:#de0f6f;
+}
+
+input{
+  padding:10px;
+}
+
+button{
+  padding:10px;
+  background:#d70683;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
+.task{
+  background:white;
+  margin:10px;
+  padding:10px;
+  border-radius:6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>EduPlanner</h1>
+
+
+<input id="taskInput" placeholder="Enter your task">
+<button onclick="addTask()">Add</button>
+
+
+<div id="taskList"></div>
+
+<script>
+
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+
+function showTasks(){
+
+  let list = document.getElementById("taskList");
+  list.innerHTML = "";
+
+  tasks.forEach((task,i)=>{
+    list.innerHTML += `
+      <div class="task">
+        ${task}
+        <button onclick="deleteTask(${i})">Delete</button>
+      </div>
+    `;
+  });
+
+}
+
+
+function addTask(){
+
+  let input = document.getElementById("taskInput");
+
+  if(input.value === "") return;
+
+  tasks.push(input.value);
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  input.value = "";
+
+  showTasks();
+}
+
+
+function deleteTask(index){
+
+  tasks.splice(index,1);
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  showTasks();
+}
+
+
+showTasks();
+
+
+
+if ("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+</script>
+
+</body>
+</html>
