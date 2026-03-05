@@ -1,119 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>EduPlanner</title>
-
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#3B82F6">
-
-<style>
-
-body{
-  font-family: Arial;
-  text-align:center;
-  background:#f4f6ff;
-  padding:20px;
-}
-
-h1{
-  color:#de0f6f;
-}
-
-input{
-  padding:10px;
-}
-
-button{
-  padding:10px;
-  background:#d70683;
-  color:white;
-  border:none;
-  cursor:pointer;
-}
-
-.task{
-  background:white;
-  margin:10px;
-  padding:10px;
-  border-radius:6px;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPlanner </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <meta name="theme-color" content="#2196F3">
 </head>
-
 <body>
+    <header class="app-header">
+        <button id="menu-toggle">☰</button>
+        <h1>EduPlanner</h1>
+        <button id="settings-btn">⚙</button>
+    </header>
 
-<h1>EduPlanner</h1>
+    <div class="tab-bar">
+        <button class="tab active" data-tab="tasks">Tasks</button>
+        <button class="tab" data-tab="calendar">Calendar</button>
+        <button class="tab" data-tab="labels">Labels</button>
+    </div>
 
+    <section id="tasks-tab" class="tab-content active">
+        <div class="task-filter">
+            <input type="text" id="search-task" placeholder="Search tasks...">
+            <select id="label-filter">
+                <option value="all">All Task</option>
+                <option value="lecture">Lecture</option>
+                <option value="assignment">Assignment</option>
+                <option value="exam">Exam</option>
+            </select>
+        </div>
+        <ul id="task-list" class="task-list"></ul>
+        <button id="add-task-btn" class="fab">+</button>
+    </section>
 
-<input id="taskInput" placeholder="Enter your task">
-<button onclick="addTask()">Add</button>
+    <section id="calendar-tab" class="tab-content">
+        <div class="calendar-header">
+            <button id="prev-month">&larr;</button>
+            <h2 id="calendar-title">March 2026</h2>
+            <button id="next-month">&rarr;</button>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
 
+    <section id="labels-tab" class="tab-content">
+        <ul class="label-list">
+            <li class="label-item">
+                <input type="checkbox" checked>
+                <span>Lecture</span>
+                <span class="label-count">3</span>
+            </li>
+            <li class="label-item">
+                <input type="checkbox" checked>
+                <span>Assignment</span>
+                <span class="label-count">5</span>
+            </li>
+            <li class="label-item">
+                <input type="checkbox" checked>
+                <span>Exam</span>
+                <span class="label-count">2</span>
+            </li>
+            <li class="label-item">
+                <input type="checkbox">
+                <span>Project</span>
+                <span class="label-count">1</span>
+            </li>
+        </ul>
+    </section>
 
-<div id="taskList"></div>
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <button id="close-settings">&times;</button>
+            <h3>Settings</h3>
+            <div class="settings-item">
+                <label>Theme</label>
+                <select>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <label>Notifications</label>
+                <select>
+                    <option value="on">On</option>
+                    <option value="off">Off</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <label>Export Data</label>
+                <button id="export-btn">Download JSON</button>
+            </div>
+        </div>
+    </div>
 
-<script>
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <button id="close-task">&times;</button>
+            <h3>Add New Task</h3>
+            <div class="form-group">
+                <label>Task Title</label>
+                <input type="text" id="task-title" required>
+            </div>
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="task-date" required>
+            </div>
+            <div class="form-group">
+                <label>Label</label>
+                <select id="task-label">
+                    <option value="lecture">Lecture</option>
+                    <option value="assignment">Assignment</option>
+                    <option value="exam">Exam</option>
+                    <option value="project">Project</option>
+                </select>
+            </div>
+            <button id="save-task-btn">Save Task</button>
+        </div>
+    </div>
 
-
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-
-function showTasks(){
-
-  let list = document.getElementById("taskList");
-  list.innerHTML = "";
-
-  tasks.forEach((task,i)=>{
-    list.innerHTML += `
-      <div class="task">
-        ${task}
-        <button onclick="deleteTask(${i})">Delete</button>
-      </div>
-    `;
-  });
-
-}
-
-
-function addTask(){
-
-  let input = document.getElementById("taskInput");
-
-  if(input.value === "") return;
-
-  tasks.push(input.value);
-
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  input.value = "";
-
-  showTasks();
-}
-
-
-function deleteTask(index){
-
-  tasks.splice(index,1);
-
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  showTasks();
-}
-
-
-showTasks();
-
-
-
-if ("serviceWorker" in navigator){
-  navigator.serviceWorker.register("service-worker.js");
-}
-
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
