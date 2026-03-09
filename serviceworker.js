@@ -1,20 +1,37 @@
-const cacheName = "eduplanner-v1";
+const CACHE_NAME = "eduplan-cache";
 
-const filesToCache = [
-  "/",
-  "index.html",
-  "manifest.json",
-  "icon.png"
+const urlsToCache = [
+"index.html",
+"manifest.json",
+"icon.png"
 ];
 
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(cacheName).then(cache => cache.addAll(filesToCache))
-  );
+self.addEventListener("install", function(event){
+
+event.waitUntil(
+
+caches.open(CACHE_NAME)
+.then(function(cache){
+
+return cache.addAll(urlsToCache);
+
+})
+
+);
+
 });
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
-  );
+self.addEventListener("fetch", function(event){
+
+event.respondWith(
+
+caches.match(event.request)
+.then(function(response){
+
+return response || fetch(event.request);
+
+})
+
+);
+
 });
