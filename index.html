@@ -1,462 +1,230 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduPlanner mini</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
-    <meta name="theme-color" content="#2196F3">
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+
+<title>EduPlan</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+
+body{
+font-family:Arial;
+background:#eef2f7;
+display:flex;
+justify-content:center;
+margin-top:30px;
 }
 
-body {
-    background: #F5F9FF;
-    color: #2D3748;
+.container{
+width:350px;
+background:white;
+border-radius:15px;
+padding:20px;
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
 
-.app-header {
-    background: #2196F3;
-    color: white;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+h2{
+text-align:center;
 }
 
-.app-header button {
-    background: transparent;
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
+.menu{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
 }
 
-.tab-bar {
-    display: flex;
-    background: white;
-    border-bottom: 1px solid #E3F2FD;
+.menu button{
+flex:1;
+margin:3px;
+padding:8px;
+border:none;
+background:#4a90e2;
+color:white;
+border-radius:8px;
 }
 
-.tab {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    color: #666;
-    cursor: pointer;
+.screen{
+display:none;
 }
 
-.tab.active {
-    color: #2196F3;
-    border-bottom: 2px solid #2196F3;
+.active{
+display:block;
 }
 
-.tab-content {
-    display: none;
-    padding: 16px;
+.task{
+background:#e6f0ff;
+margin:5px;
+padding:8px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
 }
 
-.tab-content.active {
-    display: block;
+input{
+width:90%;
+padding:8px;
+margin-top:8px;
 }
 
-.task-filter {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
+.addBtn{
+margin-top:8px;
+padding:8px;
+background:#27ae60;
+color:white;
+border:none;
 }
 
-.task-filter input, .task-filter select {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #E3F2FD;
-    border-radius: 4px;
+.dark{
+background:#1e1e1e;
+color:white;
 }
 
-.task-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.dark .container{
+background:#2c2c2c;
 }
 
-.task-item {
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+</style>
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.calendar-header button {
-    background: #2196F3;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-}
-
-.calendar-day {
-    padding: 12px;
-    background: white;
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.calendar-day.has-task {
-    background: #E3F2FD;
-    color: #2196F3;
-    font-weight: bold;
-}
-
-.label-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.label-item {
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.label-count {
-    color: #666;
-    font-size: 14px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 100;
-}
-
-.modal-content {
-    background: white;
-    margin: 20% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 400px;
-    position: relative;
-}
-
-.modal-content button:first-child {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #E3F2FD;
-    border-radius: 4px;
-}
-
-.settings-item {
-    margin-bottom: 16px;
-}
-
-.settings-item label {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.settings-item select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #E3F2FD;
-    border-radius: 4px;
-}
-
-.fab {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #2196F3;
-    color: white;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-#save-task-btn, #export-btn {
-    background: #2196F3;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-    </style>
 </head>
+
 <body>
-    <header class="app-header">
-        <button id="menu-toggle">☰</button>
-        <h1>EduPlanner</h1>
-        <button id="settings-btn">⚙</button>
-    </header>
 
-    <div class="tab-bar">
-        <button class="tab active" data-tab="tasks">Tasks</button>
-        <button class="tab" data-tab="calendar">Calendar</button>
-        <button class="tab" data-tab="labels">Labels</button>
-    </div>
+<div class="container">
 
-    <section id="tasks-tab" class="tab-content active">
-        <div class="task-filter">
-            <input type="text" id="search-task" placeholder="Search tasks...">
-            <select id="label-filter">
-                <option value="all">All Labels</option>
-                <option value="lecture">Lecture</option>
-                <option value="assignment">Assignment</option>
-                <option value="exam">Exam</option>
-            </select>
-        </div>
-        <ul id="task-list" class="task-list"></ul>
-        <button id="add-task-btn" class="fab">+</button>
-    </section>
+<h2>EduPlan</h2>
 
-    <section id="calendar-tab" class="tab-content">
-        <div class="calendar-header">
-            <button id="prev-month">&larr;</button>
-            <h2 id="calendar-title">March 2026</h2>
-            <button id="next-month">&rarr;</button>
-        </div>
-        <div id="calendar-grid" class="calendar-grid"></div>
-    </section>
+<div class="menu">
+<button onclick="showScreen('schedule')">Schedule</button>
+<button onclick="showScreen('tasks')">Tasks</button>
+<button onclick="showScreen('notes')">Notes</button>
+<button onclick="showScreen('settings')">Settings</button>
+</div>
 
-    <section id="labels-tab" class="tab-content">
-        <ul class="label-list">
-            <li class="label-item">
-                <input type="checkbox" checked>
-                <span>Lecture</span>
-                <span class="label-count">3</span>
-            </li>
-            <li class="label-item">
-                <input type="checkbox" checked>
-                <span>Assignment</span>
-                <span class="label-count">5</span>
-            </li>
-            <li class="label-item">
-                <input type="checkbox" checked>
-                <span>Exam</span>
-                <span class="label-count">2</span>
-            </li>
-            <li class="label-item">
-                <input type="checkbox">
-                <span>Project</span>
-                <span class="label-count">1</span>
-            </li>
-        </ul>
-    </section>
+<div id="schedule" class="screen active">
+<h3>Today's Schedule</h3>
+<p>8:00 AM - Math</p>
+<p>9:00 AM - English</p>
+<p>10:30 AM - History</p>
+</div>
 
-    <div id="task-modal" class="modal">
-        <div class="modal-content">
-            <button id="close-task">&times;</button>
-            <h3>Add New Task</h3>
-            <div class="form-group">
-                <label>Task Title</label>
-                <input type="text" id="task-title" required>
-            </div>
-            <div class="form-group">
-                <label>Due Date</label>
-                <input type="date" id="task-date" required>
-            </div>
-            <div class="form-group">
-                <label>Label</label>
-                <select id="task-label">
-                    <option value="lecture">Lecture</option>
-                    <option value="assignment">Assignment</option>
-                    <option value="exam">Exam</option>
-                    <option value="project">Project</option>
-                </select>
-            </div>
-            <button id="save-task-btn">Save Task</button>
-        </div>
-    </div>
+<div id="tasks" class="screen">
+<h3>Tasks</h3>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <button id="close-settings">&times;</button>
-            <h3>Settings</h3>
-            <div class="settings-item">
-                <label>Theme</label>
-                <select>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                </select>
-            </div>
-            <div class="settings-item">
-                <label>Notifications</label>
-                <select>
-                    <option value="on">On</option>
-                    <option value="off">Off</option>
-                </select>
-            </div>
-            <div class="settings-item">
-                <label>Export Data</label>
-                <button id="export-btn">Download JSON</button>
-            </div>
-        </div>
-    </div>
+<div id="taskList"></div>
 
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    loadTasks();
-    initTabs();
-    initModals();
-    initCalendar();
-    initExports();
-    registerServiceWorker();
+<input type="text" id="taskInput" placeholder="Enter task">
+
+<button class="addBtn" onclick="addTask()">Add Task</button>
+
+</div>
+
+<div id="notes" class="screen">
+<h3>Notes</h3>
+<p>Study your lessons every night.</p>
+</div>
+
+<div id="settings" class="screen">
+<h3>Settings</h3>
+<button onclick="Dark()">Toggle Dark Mode</button>
+</div>
+
+</div>
+
+<script>
+
+function showScreen(screen){
+
+let screens=document.querySelectorAll(".screen");
+
+screens.forEach(s=>s.classList.remove("active"));
+
+document.getElementById(screen).classList.add("active");
+
+}
+
+let tasks=[];
+
+function addTask(){
+
+let taskInput=document.getElementById("taskInput");
+
+let task=taskInput.value;
+
+if(task==="") return;
+
+tasks.push(task);
+
+localStorage.setItem("tasks",JSON.stringify(tasks));
+
+taskInput.value="";
+
+displayTasks();
+
+}
+
+function deleteTask(index){
+
+tasks.splice(index,1);
+
+localStorage.setItem("tasks",JSON.stringify(tasks));
+
+displayTasks();
+
+}
+
+function displayTasks(){
+
+let list=document.getElementById("taskList");
+
+list.innerHTML="";
+
+tasks.forEach((task,index)=>{
+
+let div=document.createElement("div");
+
+div.className="task";
+
+div.innerHTML=task+" <button onclick='deleteTask("+index+")'>X</button>";
+
+list.appendChild(div);
+
 });
 
-const TASKS_KEY = 'eduplanner_tasks';
-
-function loadTasks() {
-    const tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
-    const list = document.getElementById('task-list');
-    list.innerHTML = '';
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.className = 'task-item';
-        li.innerHTML = `
-            <div>
-                <input type="checkbox" ${task.completed ? 'checked' : ''} 
-                       onchange="toggleTask('${task.id}')">
-                <span>${task.title} (${task.label})</span>
-            </div>
-            <span>${task.dueDate}</span>
-        `;
-        list.appendChild(li);
-    });
 }
 
-function toggleTask(id) {
-    const tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
-    const task = tasks.find(t => t.id === id);
-    task.completed = !task.completed;
-    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
-    loadTasks();
+function loadTasks(){
+
+let saved=localStorage.getItem("tasks");
+
+if(saved){
+tasks=JSON.parse(saved);
 }
 
-document.getElementById('save-task-btn').addEventListener('click', () => {
-    const tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
-    const newTask = {
-        id: Date.now().toString(),
-        title: document.getElementById('task-title').value,
-        dueDate: document.getElementById('task-date').value,
-        label: document.getElementById('task-label').value,
-        completed: false
-    };
-    tasks.push(newTask);
-    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
-    document.getElementById('task-modal').style.display = 'none';
-    loadTasks();
-});
+displayTasks();
 
-function initTabs() {
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(${tab.dataset.tab}-tab).classList.add('active');
-        });
-    });
 }
 
-function initModals() {
-    document.getElementById('add-task-btn').onclick = () => document.getElementById('task-modal').style.display = 'block';
-    document.getElementById('settings-btn').onclick = () => document.getElementById('settings-modal').style.display = 'block';
-    document.getElementById('close-task').onclick = () => document.getElementById('task-modal').style.display = 'none';
-    document.getElementById('close-settings').onclick = () => document.getElementById('settings-modal').style.display = 'none';
+function Dark(){
+document.body.classList.toggle("dark");
 }
 
-function initCalendar() {
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const now = new Date();
-    let html = '<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>';
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-    for(let i=0; i<firstDay; i++) html += '<div></div>';
-    for(let day=1; day<=new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(); day++) {
-        const dateStr = ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(day).padStart(2,'0')};
-        const hasTask = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]').some(t => t.dueDate === dateStr);
-        html += <div class="calendar-day ${hasTask ? 'has-task' : ''}">${day}</div>;
-    }
-    document.getElementById('calendar-grid').innerHTML = html;
+loadTasks();
+
+</script>
+
+<script>
+
+if("serviceWorker" in navigator){
+
+navigator.serviceWorker.register("service-worker.js")
+.then(()=>console.log("Service Worker Registered"))
+
 }
 
-function initExports() {
-    document.getElementById('export-btn').addEventListener('click', () => {
-        const blob = new Blob([localStorage.getItem(TASKS_KEY) || '[]'], {type:'application/json'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'eduplanner-tasks.json';
-        a.click();
-    });
-}
+</script>
 
-function registerServiceWorker() {
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js');
-    }
-}
-    </script>
 </body>
 </html>
-
